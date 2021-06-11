@@ -1,6 +1,6 @@
 为什么用hashmap？ hashmap比list查找速度快很多，list必须必须遍历，不适合大数据
 
-hashmap用于查找：value：idx v in  hashmap; if hashmap.get(v)
+hashmap用于查找：value：idx v in  hashmap; if hashmap.get(v)； 映射关系
 hashmap用于统计：value：cnt  fromkeys 然后再+=1
 
 1）two sum：
