@@ -1,0 +1,184 @@
+为什么用hashmap？ hashmap比list查找速度快很多，list必须必须遍历，不适合大数据
+
+hashmap用于查找：value：idx v in  hashmap; if hashmap.get(v)
+hashmap用于统计：value：cnt  fromkeys 然后再+=1
+
+1）two sum：
+  题目特点：只有一对满足特定和，所以可以直接覆盖之前的hashmap（不需要顾及重复值），使用hash[value] = idx的方法，快速查找idx	
+  基本算法：定义hashmap为dict、循环，如果value在keys上则返回，如果不在则添加
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        hashmap = dict()
+        for i in range(len(nums)):
+            t = target - nums[i]
+
+            if t in hashmap:
+                return [i,hashmap[t]]
+            else:
+                hashmap[nums[i]] = i
+
+2) duplicate
+
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        hashmap = dict()
+        for i in range(len(nums)):
+            if nums[i] in hashmap:
+                return True
+            else:
+                hashmap[nums[i]] = i        
+        return False
+
+3) search and count 最长和谐序列
+
+题目要点；根据特定差值，查找存在；重复值需要计算；更倾向于count，表较max
+
+class Solution:
+    def findLHS(self, nums: List[int]) -> int:
+        hashmap = dict.fromkeys(nums,0)
+
+        for i in range(len(nums)):
+            hashmap[nums[i]] += 1
+
+        maxlen = 0
+        for k,v in hashmap.items():
+            if hashmap.get(k+1):
+                maxlen = max(maxlen,hashmap.get(k+1)+v)
+        
+        return maxlen
+        
+        
+4) 最长连续序列
+
+题目要点：不在乎重复值，不在乎idx，单个信息所以使用set而不是dict；max的简单迭代；初始判断减少时间
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        hashmap = set(nums)
+        maxlen = 0
+        for i in range(len(nums)):
+            if nums[i]-1 not in hashmap:
+                leng = 1
+                cur = nums[i]
+                while cur+1 in hashmap:
+                    cur += 1
+                    leng += 1
+                maxlen = max(maxlen,leng)
+        return maxlen
+     
+     
+ 5) 两个数据交集（不重复）
+ 
+ 题目要点：简单查找，但是注意hashmap占用空间很大，所以两个set不如保留一个list
+ 
+  class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        hashmap = set(nums2)
+
+        li = []
+
+        for i in range(len(nums1)):
+            if nums1[i] in hashmap:
+                if nums1[i] not in li:
+                    li.append(nums1[i]) 
+        
+        return li
+        
+        
+  6) 两数组交集（重复）
+  
+  题目要点：count；比较两个list的count比较，只需要一个hashmap统计，另外一个遍历，count -= 1直到为0
+  
+  class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        hashmap = dict.fromkeys(nums2,0)
+        li = []
+
+        for i in range(len(nums2)):
+            hashmap[nums2[i]] += 1
+        
+        for i in range(len(nums1)):
+            if hashmap.get(nums1[i]) and hashmap[nums1[i]]> 0:
+                li.append(nums1[i])
+                hashmap[nums1[i]] -= 1
+
+        return li
+        
+        
+7）字母异位（count）
+
+题目要点：两个dict的比较，是没有顺序的，所有元素都相同就是相等，不像list，（set也没有顺序，tuple有顺序）
+     
+     class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        hashmap1 = dict.fromkeys(s,0)
+        hashmap2 = dict.fromkeys(t,0)
+
+        for i in s:
+            hashmap1[i] += 1
+        
+        for i in t:
+            hashmap2[i] += 1
+
+        return(hashmap1 == hashmap2)
+        
+        
+   8） 快乐数
+   各个位平方和=1
+   
+   题目要点：基本数学原理：不能和为1的最后一定落入循环; hashmap作用用于记录track_hist； while True循环来表示直到终结。
+   
+   class Solution:
+    def isHappy(self, n: int) -> bool:
+        hashmap = set()
+        if n == 1: return True
+        
+        while True:
+            if n == 1 : return True
+            elif n in hashmap: return False
+
+            hashmap.add(n)
+            n = sum([int(j)**2 for j in str(n)])
+            
+            
+9) 同构字符串
+一一映射
+
+题目要点：一一映射： dict储存映射关系，判断是否相等，并添加新的，还要判断长度，避免多对一；len可以用于set list str，list和ste有idx，dict不可以直接len，要list（.keys)or value or items
+
+class Solution:
+    def isIsomorphic(self, s: str, t: str) -> bool:
+        if len(s) != len(t): return False
+
+        hashmap = dict()
+
+        for i in range(len(s)):
+            if hashmap.get(s[i]):
+                if t[i] != hashmap[s[i]]:
+                    return False
+            hashmap[s[i]] = t[i]
+        
+        hashmapset = set(list(hashmap.values()))
+
+        return len(hashmapset) == len(list(hashmap.keys()))
+        
+10) 频次排序
+
+题目要点：dict根据value排序items 函数sorted(dict.items(),key = lambda i:(i[1],i[0]),reverse = True) 返回是一个list
+注意 dict.items() dict.keys() dict.values()返回的是一个视图，不能len也不能idx，但是items有两个idx，items[0]表示key items[1]表示value
+重要函数sorted（iterable，排序对象使用lambda，reverse是否desc）
+
+class Solution:
+    def frequencySort(self, s: str) -> str:
+        hashmap = dict.fromkeys(s,0)
+        li = []
+
+        for i in range(len(s)):
+            hashmap[s[i]] += 1
+
+        hashmap = sorted(hashmap.items(), key = lambda i: (i[1],i[0]), reverse = True)
+
+        for k,v in hashmap:
+            li.extend([k]*v)
+
+        return ''.join(li)
