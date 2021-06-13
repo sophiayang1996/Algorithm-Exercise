@@ -1,7 +1,8 @@
 为什么用hashmap？ hashmap比list查找速度快很多，list必须必须遍历，不适合大数据
 
-hashmap用于查找：value：idx v in  hashmap; if hashmap.get(v)； 映射关系
+hashmap用于查找：value：idx v in  hashmap; if hashmap.get(v)； record作用
 hashmap用于统计：value：cnt  fromkeys 然后再+=1
+hashmap作为映射、分组
 
 1）two sum：
   题目特点：只有一对满足特定和，所以可以直接覆盖之前的hashmap（不需要顾及重复值），使用hash[value] = idx的方法，快速查找idx	
@@ -14,8 +15,7 @@ class Solution:
 
             if t in hashmap:
                 return [i,hashmap[t]]
-            else:
-                hashmap[nums[i]] = i
+            hashmap[nums[i]] = i
 
 2) duplicate
 
@@ -182,3 +182,173 @@ class Solution:
             li.extend([k]*v)
 
         return ''.join(li)
+
+
+
+11) 三数之和
+
+题目要点：hashmap只解决最后一次查找，而且是往回查询，其余的循环都是向前，所以当后一个与前一个相同时，可以直接continue跳过； x.sort()正确用法；hashmap只能在最后一次循环前定义；hashmap最后无论如何都要加上遍历的值；
+
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        nums.sort()
+
+        if not nums or len(nums) < 4: return []
+        
+        li = []
+
+        for i in range(len(nums)-3):
+            if i>0 and nums[i]==nums[i-1]: continue
+
+            for j in range(i+1,len(nums)-2):
+                if j > i+1 and nums[j]==nums[j-1]: continue
+
+                hashmap = set()
+
+                for k in range(j+1,len(nums)):
+                    t = target - nums[i] - nums[j] - nums[k]
+                    if t in hashmap:
+                        res = [nums[i],nums[j],nums[k],t]
+                        res.sort()
+                        
+                        if res not in li:
+                            li.append(res)
+                    
+                    hashmap.add(nums[k])
+
+        return li
+                
+12) 三数之和，（不同列,4个向量输入，每个找一个，组成和）
+
+题目要点： 不同列，所以不能使用hashmap添加方法；最大的逻辑就是减少时间复杂度，对半相加，两两比较和就行；本题最大特色是同个元素有不同的idx，返回结果是根据idx的，所以重复的组合属于不同结果
+
+class Solution:
+    def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -> int:
+
+        if not nums1 or not nums2 or not nums3 or not nums4: return []
+
+        hashmap1 = dict()
+        hashmap2 = dict()
+
+        cnt = 0
+
+        for a in nums1:
+            for b in nums2:
+                hashmap1[a+b] = hashmap1.get(a+b,0) + 1
+
+        for c in nums3:
+            for d in nums4:
+                hashmap2[c+d] = hashmap2.get(c+d,0) + 1
+
+        for k,v in hashmap1.items():
+            cnt += hashmap2.get(-k,0) * v
+
+        return cnt
+
+  
+  
+  13）字母异位词 ****
+  给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+  
+  题目要点：异位类的问题，都可以通过排序；题目很好，使用dict的hashmap，对应排序类型和list；collections.defaultdict(list)规定value的类型；sort string的时候，要先sorted()然后"".join(str)再次拼成str
+  collectons.defaultdict(int) 会给每个key默认v为0相当于get,但是get需要一个key，defaultdict定义了格式。
+  根本逻辑是特征分组，又可以根据特征，cnt，也有载入原来的数值的，这时候就要append，defaultdict了
+  
+  
+ 
+  class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        mp = collections.defaultdict(list)
+
+        for st in strs:
+            key = "".join(sorted(st))
+            mp[key].append(st)
+        
+        return list(mp.values())
+
+
+14)回旋阵
+给定平面上 n 对 互不相同 的点 points ，其中 points[i] = [xi, yi] 。回旋镖 是由点 (i, j, k) 表示的元组 ，其中 i 和 j 之间的距离和 i 和 k 之间的距离相等（需要考虑元组的顺序）。
+
+返回平面上所有回旋镖的数量。
+
+题目要点：分组，记录平方和；没有重复值忧虑；
+
+class Solution:
+    def numberOfBoomerangs(self, points: List[List[int]]) :
+        if not points or len(points) < 3: return 0
+        res = 0
+
+        for i in range(len(points)):
+            hashmap = collections.defaultdict(int)
+
+            for j in range(len(points)):
+                sumv = (points[i][1]-points[j][1])**2+(points[i][0]-points[j][0])**2
+                hashmap[sumv] += 1
+            
+            for v in hashmap.values():
+                if v >= 2: 
+                    res += v*(v-1)
+
+
+        return res
+
+15) 重复元素
+给定一个整数数组和一个整数 k，判断数组中是否存在两个不同的索引 i 和 j，使得 nums [i] = nums [j]，并且 i 和 j 的差的 绝对值 至多为 k。
+
+题目要点：判断两数相等的查询，使用hashmap减少一层循环，边循环边记录；set的删除项 set.remove(item)；另外删除dict用.pop(key)
+
+class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        hashmap = set()
+
+        if not nums: return False
+
+        for i in range(len(nums)):
+            if nums[i] in hashmap:
+                return True
+            hashmap.add(nums[i])
+
+            if len(hashmap) > k:
+                hashmap.remove(nums[i-k])
+
+        return False
+        
+        
+16) 重复元素2 *****
+给你一个整数数组 nums 和两个整数 k 和 t 。请你判断是否存在 两个不同下标 i 和 j，使得 abs(nums[i] - nums[j]) <= t ，同时又满足 abs(i - j) <= k 。     
+
+如果存在则返回 true，不存在返回 false。
+
+题目要点：滑动窗口，桶思想
+
+class Solution:
+    def containsNearbyAlmostDuplicate(self, nums: List[int], k: int, t: int) -> bool:
+
+        if not nums or k<0 or t<0 : return False
+
+        hashmap = dict()
+        d = t+1
+
+        for i in range(len(nums)):
+            bucket = nums[i]//(t+1)
+
+            if bucket in hashmap: return True
+            if bucket -1 in hashmap:
+                if abs(hashmap[bucket-1] - nums[i]) <= t:
+                    return True
+            if bucket+1 in hashmap:
+                if abs(hashmap[bucket+1]-nums[i]) <= t:
+                    return True
+            hashmap[bucket] = nums[i]
+
+            if i>=k:
+                hashmap.pop(nums[i-k]//(t+1))
+
+        return False
+
+
+
+
+
+
