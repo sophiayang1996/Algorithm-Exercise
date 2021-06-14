@@ -1,0 +1,162 @@
+1) 反转元音
+class Solution:
+    def reverseVowels(self, s: str) -> str:
+        ele = set('aeiouAEIOU')
+        s = list(s)
+
+        left, right = 0, len(s)-1
+        while left < right:
+            if s[left] in ele and s[right] in ele:
+                s[left], s[right] = s[right], s[left]
+                left += 1
+                right -= 1
+            elif s[left] in ele:
+                right -= 1
+            elif s[right] in ele:
+                left += 1
+            else:
+                right -= 1
+                left += 1
+        
+        return ''.join(s)
+        
+        
+        class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        if not s:
+            return False
+
+        left, right = 0, len(s)-1
+        while left < right:
+            if s[left].isalnum() and s[right].isalnum():
+                if s[left].lower() == s[right].lower():
+                    left += 1
+                    right -= 1
+                else:
+                    return False
+            elif s[left].isalnum():
+                right -= 1
+            elif s[right].isalnum():
+                left += 1
+            else:
+                left += 1
+                right -= 1
+        return True
+        
+        
+        
+        
+        class Solution:
+    def validPalindrome(self, s: str) -> bool:
+        if len(s) < 2: return True
+
+        def isPalindrome(s, start, end):
+            while start < end:
+                if s[start] == s[end]:
+                    start += 1
+                    end -= 1
+                    continue
+                else: return False
+            return True
+
+        start, end = 0, len(s)-1
+        while start < end:
+            if s[start] == s[end]:
+                start += 1
+                end -= 1
+                continue
+            else: 
+                return isPalindrome(s, start+1, end) or isPalindrome(s, start, end-1)
+        return True
+        
+        
+        
+        
+        class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        if not height:
+            return False
+        
+        left, right = 0, len(height)-1
+        s = 0
+        while left < right:
+            s= max(s, abs(left-right) * min(height[left],height[right]))
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+        return s
+        
+        
+        
+        
+        class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+
+        if not nums:
+            return False
+
+        f,s = 0,0
+        while f < len(nums):
+            if nums[s] != 0:
+                s += 1
+            elif nums[f] != 0:
+                nums[s],nums[f] = nums[f],nums[s]
+                s += 1
+            f += 1
+        return nums
+        
+        
+        
+        
+        class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        s, f = 0, 0
+        while f < len(nums):
+            if nums[s] != val:
+                s += 1
+            elif nums[f] != val:
+                nums[s] = nums[f]
+                s += 1
+            f += 1
+        return s
+        
+        
+        
+        
+        class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        s,f = 0,0
+        while f < len(nums):
+            if nums[s] != nums[f]:
+                s += 1
+                nums[s] = nums[f]
+            f += 1
+        return s+1
+        
+        
+        
+        给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 最多出现两次 ，返回删除后数组的新长度。
+
+不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        if not nums: return 0
+        flag = True
+        slower, faster = 0, 1
+        while faster <len(nums):
+            if nums[slower] != nums[faster]:
+                slower += 1
+                nums[slower] = nums[faster]
+                flag = True
+            else:
+                if flag:
+                    slower += 1
+                    nums[slower] = nums[faster]
+                    flag = False
+            faster += 1 
+        return slower + 1
