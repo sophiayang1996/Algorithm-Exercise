@@ -1,3 +1,12 @@
+指针主要用到双指针：左右指针，快慢指针
+左右指针：left, right = 0, len()-1   while left < right:  left+=1 right-=1    每次必须至少移动一格，达到条件交换并双双移动  
+快慢指针：fast,slow = 0,0  while fast < len():  fast+=1 slow+=1 每次fast必须移动，所以while里面只要考虑slow移动的情况
+其他多指针：可能有两个slow 一个fast
+
+
+
+1. left and right （左右指针）
+
 1) 反转元音
 class Solution:
     def reverseVowels(self, s: str) -> str:
@@ -20,8 +29,10 @@ class Solution:
         
         return ''.join(s)
         
-        
-        class Solution:
+ 
+ 2）回文数
+ 
+ class Solution:
     def isPalindrome(self, s: str) -> bool:
         if not s:
             return False
@@ -44,9 +55,10 @@ class Solution:
         return True
         
         
-        
-        
-        class Solution:
+ 3）回文数2
+ 允许容错数为n
+ 
+class Solution:
     def validPalindrome(self, s: str) -> bool:
         if len(s) < 2: return True
 
@@ -71,8 +83,9 @@ class Solution:
         
         
         
-        
-        class Solution:
+4） 求最大面积
+
+class Solution:
     def maxArea(self, height: List[int]) -> int:
         if not height:
             return False
@@ -89,8 +102,11 @@ class Solution:
         
         
         
-        
-        class Solution:
+2. fast and slow
+
+1) 移动0到末尾
+
+class Solution:
     def moveZeroes(self, nums: List[int]) -> None:
         """
         Do not return anything, modify nums in-place instead.
@@ -111,8 +127,9 @@ class Solution:
         
         
         
-        
-        class Solution:
+2） 移动 val到末尾
+
+class Solution:
     def removeElement(self, nums: List[int], val: int) -> int:
         s, f = 0, 0
         while f < len(nums):
@@ -126,20 +143,23 @@ class Solution:
         
         
         
-        
-        class Solution:
+3） 移动重复数（移除）
+不增加空间
+
+class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
         s,f = 0,0
         while f < len(nums):
             if nums[s] != nums[f]:
                 s += 1
-                nums[s] = nums[f]
+                nums[s] = nums[f]  ****换也行
             f += 1
         return s+1
         
         
-        
-        给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 最多出现两次 ，返回删除后数组的新长度。
+4） 移动重复数2（允许k次重复）
+
+给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 最多出现两次 ，返回删除后数组的新长度。
 
 不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
 
@@ -149,14 +169,48 @@ class Solution:
         flag = True
         slower, faster = 0, 1
         while faster <len(nums):
-            if nums[slower] != nums[faster]:
+            if nums[slower] != nums[faster]:   **** slow移动的条件
                 slower += 1
                 nums[slower] = nums[faster]
                 flag = True
             else:
-                if flag:
+                if flag: ****slow 移动的额外条件
                     slower += 1
                     nums[slower] = nums[faster]
                     flag = False
             faster += 1 
         return slower + 1
+        
+        
+        
+        
+ multi pointer
+ 
+ 1） 合并两个数组
+ 给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。
+
+初始化 nums1 和 nums2 的元素数量分别为 m 和 n 。你可以假设 nums1 的空间大小等于 m + n，这样它就有足够的空间保存来自 nums2 的元素。
+
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        #三个指针，从后向前进行插入
+        s1, s2, end =m-1, n-1, m + n -1
+        while s1 >=0 and s2 >=0:
+            if nums1[s1] <= nums2[s2]:
+                nums1[end] = nums2[s2]
+                s2 -= 1
+            else:
+                nums1[end] = nums1[s1]
+                s1 -= 1
+            end -= 1
+        if s2 >= 0:
+            nums1[:s2+1] = nums2[:s2+1]
+            
+            
+            
+            
+     
+ 
