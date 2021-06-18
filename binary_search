@@ -27,3 +27,5 @@ while l <= r:
 while l < r:
   return l  ***最后相等的值
   
+关于 r = mid or mid - 1取决于mid是否可以为查找值
+  
