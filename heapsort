@@ -1,0 +1,28 @@
+biggest heap *******
+
+left = lambda i: 2*i + 1
+right = lambda i: 2*i + 2
+
+def heapSort(nums):  
+    heap_size = len(nums)
+    
+    buildMaxHeap(nums, heap_size)
+    
+    for i in range(len(nums)-1,-1,-1):
+        nums[i], nums[0] = nums[0], nums[i]
+        heap_size -= 1
+        keepHeap(nums, 0, heap_size)
+    
+def buildMaxHeap(nums, heap_size):
+    for i in range(len(nums)//2-1,-1,-1):
+        keepHeap(nums, i, heap_size)
+    
+def keepHeap(nums,i,heap_size):
+    l, r = left(i), right(i)
+        
+    largest = l if l < heap_size and nums[l] > nums[i] else i
+    largest = r if r < heap_size and nums[r] > nums[largest] else largest
+        
+    if largest != i:
+        nums[i], nums[largest] = nums[largest], nums[i]
+        keepHeap(nums, largest, heap_size)
