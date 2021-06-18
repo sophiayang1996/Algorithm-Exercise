@@ -56,3 +56,26 @@ class Solution:
         for i in range(k-1):
             hp.heappop(heap)
         return hp.heappop(heap)
+        
+        
+        
+最多能完成排序的块
+
+数组arr是[0, 1, ..., arr.length - 1]的一种排列，我们将这个数组分割成几个“块”，并将这些块分别进行排序。之后再连接起来，使得连接的结果和按升序排序后的原数组相同。
+
+我们最多能将数组分成多少块？
+
+class Solution:
+    def maxChunksToSorted(self, arr: List[int]) -> int:
+        '''
+        特殊之处，就是这道题的arr的元素是0到n-1，因此分割块的话，如果前i个元素分在一起，那么这个块最大值为i
+        '''
+        res = 0
+        max_ = 0
+        for i in range(len(arr)):
+            max_ = max(max_, arr[i])
+            if i == max_:
+                res += 1
+        return res
+
+
