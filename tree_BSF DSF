@@ -1,9 +1,164 @@
 BSF
+iteration: queue
 
 DSF
+iteration: stack
 1. preorder traversal
 2. inorder traversal
 3. postorder traversal
 
 recurrsion 
 iteraton
+
+
+class treeNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+        
+1. BSF
+1.1 recurrsion:
+
+def BSFrecursion(root: treeNode):
+    levels = []
+    if not root: return None
+    
+    def BSF(root, level):
+        if not root: return None
+
+        if len(levels) == level:
+            levels.append([])
+
+        levels[level].append(root.val)
+
+        BSF(root.left, level+1)
+        BSF(root.right, level+1)
+    
+    BSF(root, 0)
+    return levels
+
+1.2 iteration:
+
+def BSFiteration(root):
+    levels = []
+    level = 0
+    if not root: return None
+    
+    queue = [root]
+    
+    while queue:
+        levels.append([])
+        lenque = len(queue)
+        
+        for i in range(lenque):
+            node = queue.pop(0)
+            levels[level].append(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        
+        level += 1
+        
+    return levels
+    
+    
+    
+ 2. DSF
+ 2.1 preorder traversal
+ 2.1.1 
+ 
+res = []
+
+def preOrderRecur(root):
+    if not root: return
+    
+    res.append(root.val)
+    preOrderRecur(root.left)
+    preOrderRecur(root.right)
+    
+    return res
+    
+ 2.1.2
+ 
+ def preOrderIter(root):
+    res = []
+    if not root: return
+    
+    stack = [root]
+    
+    while stack:
+        node = stack.pop()
+        res.append(node.val)
+        
+        if node.right:
+            stack.append(node.right)
+        if node.left:
+            stack.append(node.left)
+        
+    return res
+
+ 2.2 postorder traversal
+ 
+ 2.2.1
+
+res = []
+
+def postOrderRecur(root):
+    if not root: return
+    
+    postOrderRecur(root.left)
+    postOrderRecur(root.right)
+    res.append(root.val)
+    
+    return res
+    
+ 2.2.2
+ 
+ def postOrderIter(root):
+    res = []
+    if not root: return
+    
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        res.append(node.val)
+        if node.left:
+            stack.append(node.left)
+        if node.right:
+            stack.append(node.right)
+        
+    return res[::-1]
+    
+  2.3.1
+  
+res = []
+
+def inOrderRecur(root):
+    if not root: return
+    
+    inOrderRecur(root.left)
+    res.append(root.val)
+    inOrderRecur(root.right)
+    
+    return res
+    
+  2.3.2
+  def inOrderIter(root):
+    res = []
+    if not root: return
+    
+    stack = []
+    while stack or root:
+        while root:
+            stack.append(root)
+            root = root.left
+        root = stack.pop()
+        res.append(root)
+        root = root.right
+    
+    return res
+ 
+        
+  
