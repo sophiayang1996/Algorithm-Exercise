@@ -41,6 +41,33 @@
                 dummy.next = add(a.next, b.next, extra) # 继续递归，直到返回
             return dummy
         return add(l1, l2, 0) # 初始进位为0
+  
+  
+  2. effective ()
+  
+  给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
+
+有效字符串需满足：
+
+左括号必须用相同类型的右括号闭合。
+左括号必须以正确的顺序闭合。
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        if not s: return True
+        hashmap = {')':'(', '}':'{', ']':'['}
+
+        stack = list()
+        for i in s:
+            if i in hashmap:
+                if not stack or stack[-1] != hashmap[i]:
+                    return False
+                stack.pop()
+            else:
+                stack.append(i)
+
+        return not stack
+
  
 
          
