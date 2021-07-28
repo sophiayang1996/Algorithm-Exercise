@@ -134,5 +134,56 @@ for i in range(len(nums)):
     right += 1
  
  ans = max(cur_len, ans)
+ 
+ 
+ 
+ 8. 最长回文子串
+ recursion
+ 
+ class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if not s: return ''
+        end, start = 0, 0
+
+        def longestlist(s, left, right):
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return left + 1, right - 1
+        
+        for i in range(len(s)):
+            left1, right1 = longestlist(s, i, i)
+            left2, right2 = longestlist(s, i, i+1)
+
+            if right1 - left1 > end - start:
+                start, end = left1, right1
+            if right2 - left2 > end - start:
+                start, end = left2, right2
+            
+        return s[start: end+1]
          
     
+9. "Z" transformation:
+将一个给定字符串 s 根据给定的行数 numRows ，以从上往下、从左到右进行 Z 字形排列。
+
+比如输入字符串为 "PAYPALISHIRING" 行数为 3 时，排列如下：
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如："PAHNAPLSIIGYIR"。
+
+请你实现这个将字符串进行指定行数变换的函数：
+
+class Solution:
+    def convert(self, s: str, numRows: int) -> str:
+        if numRows < 2: return s
+        res = ["" for _ in range(numRows)]
+        i, flag = 0, -1
+        for c in s:
+            res[i] += c
+            if i == 0 or i == numRows - 1: flag = -flag
+            i += flag
+        return "".join(res)
+
+
