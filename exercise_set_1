@@ -68,7 +68,71 @@ class Solution:
 
         return not stack
 
- 
+3. merge two linked list
+将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的
 
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        i, j = l1, l2
+        res = ListNode(0)
+        li = res
+
+        while i and j:
+            if i.val < j.val:
+                li.next = i
+                i = i.next
+            else:
+                li.next = j
+                j = j.next
+            li = li.next
+
+        if not i:
+            li.next = j
+        else:
+            li.next = i
+
+        return res.next
+        
+   4. fast and slow
+   
+   给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 只出现一次 ，返回删除后数组的新长度。
+
+不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        if not nums: return
+
+        fast, slow = 0, 0
+        while fast < len(nums):
+            if nums[fast] != nums[slow]:
+                slow += 1
+                nums[slow] = nums[fast]
+            fast += 1
+        
+        return slow + 1
+        
+ 5. KMP algorithm
+ 
+ 6. binary search
+ left, right, mid
+ return left
+
+7. moving window:
+left, right
+
+for i in range(len(nums)):
+  hashmap.remove(nums[i-1])
+  while right < len(nums) and nums[right] not in hashmap:
+    hashmap.add(nums[right])
+    right += 1
+ 
+ ans = max(cur_len, ans)
          
     
