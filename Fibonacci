@@ -1,0 +1,44 @@
+Method 1: recursion
+
+def fib(n):
+  if n <= 1:
+    return n
+  else:
+    return fib(n-1) + fib(n-2)
+
+Method 2: iteration
+
+def fib(n):
+  a, b = 0, 1
+  for i in range(n):
+    a, b = b, a+b
+    print a
+  
+Method 3: generator
+
+def fib(n):
+  a, b = 0, 1
+  for i in range(n):
+    a, b = b, a+b
+    yield a
+    
+    
+ Method 4: class
+
+class Fab(object): 
+ 
+    def __init__(self, max): 
+        self.max = max 
+        self.n, self.a, self.b = 0, 0, 1 
+ 
+    def __iter__(self): 
+        return self 
+ 
+    def next(self): 
+        if self.n < self.max: 
+            r = self.b 
+            self.a, self.b = self.b, self.a + self.b 
+            self.n = self.n + 1 
+            return r 
+        raise StopIteration()
+  
